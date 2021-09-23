@@ -1,1 +1,1 @@
-go run examples/demo/chat2/client/main.go --id="test" --token="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJjaWQiOiIxZjJkMjgzMy0yMWM5LTQxZWQtOTU5My03OTA0NzcwZTI4M2MiLCJleHAiOjE2MzI0Mjk5ODEsImlhdCI6MTYzMjQyODE4MSwiaWQiOiJzdXBlciB1c2VyIiwibmFtZSI6ImF3ZXNvbWUgbWFuIiwibmJmIjoxNjMyNDI4MTcxfQ.sIF8aIlb9YYcVtHeT7Fjzkbaa0b-AXTopc2JRvl19Uw"
+go run examples/demo/chat2/client/main.go --id="test" --token=""

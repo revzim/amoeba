@@ -37,7 +37,9 @@
 [17]: https://github.com/revzim/nano-old#nano---
 
 # [amoeba][1]
-[DOCS][17]
+[DOCS FROM NANO][17]
+
+## exact nano paradigm | `nano -> amoeba`
 ![nano image][15]
 
 ## License
