@@ -1,0 +1,1 @@
+go run examples/demo/chat2/client/main.go --id="test" --token=""
