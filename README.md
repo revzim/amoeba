@@ -16,7 +16,7 @@
 - session uuid
 - golang client ws [amoeba-client][13]
 
-## [amoeba example][16]
+## [amoeba golang client/server example][16]
 
 [1]: https://github.com/revzim/amoeba
 [2]: https://godoc.org/github.com/revzim/amoeba?status.svg
