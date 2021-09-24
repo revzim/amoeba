@@ -19,7 +19,6 @@ import (
 	"github.com/revzim/amoeba/scheduler"
 	gsjson "github.com/revzim/amoeba/serialize/json"
 	"github.com/revzim/amoeba/session"
-	"github.com/revzim/azdrivers"
 )
 
 type (
@@ -132,12 +131,12 @@ func (mgr *RoomManager) Join(s *session.Session, msg []byte) error {
 	// log.Println(string(msg))
 	room, found := mgr.rooms[testRoomID]
 	if !found {
-		g, err := amoeba.NewGroupWithDriver(fmt.Sprintf("room-%d", testRoomID), azdrivers.FirebaseKeyType, false, nil)
-		if err != nil {
-			return err
-		}
+		// g, err := amoeba.NewGroupWithDriver(fmt.Sprintf("room-%d", testRoomID), azdrivers.FirebaseKeyType, false, nil)
+		// if err != nil {
+		// 	return err
+		// }
 		room = &Room{
-			group: g, // amoeba.NewGroup(fmt.Sprintf("room-%d", testRoomID)),
+			group: amoeba.NewGroup(fmt.Sprintf("room-%d", testRoomID)),
 		}
 
 		// SET ON UPDATE POST ROOM INIT
