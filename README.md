@@ -3,7 +3,11 @@
 ## modified version of [lonng/nano][8]
 ## - [deprecated/archived fork of this repo][9]
 
+## [amoeba golang client/server example][16]
+
 ## added support for:
+- pipeline encode/decode
+- pipeline encrypt/decrypt
 - beginning of lifecycles
   - variable tick rate game loop
 - drivers:
@@ -15,8 +19,6 @@
 - session/per packet auth
 - session uuid
 - golang client ws [amoeba-client][13]
-
-## [amoeba golang client/server example][16]
 
 [1]: https://github.com/revzim/amoeba
 [2]: https://godoc.org/github.com/revzim/amoeba?status.svg

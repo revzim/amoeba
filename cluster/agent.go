@@ -281,6 +281,7 @@ func (a *agent) write() {
 				break
 			}
 
+			// log.Println("payload", string(payload))
 			// construct message and encode
 			m := &message.Message{
 				Type:  data.typ,
@@ -301,13 +302,14 @@ func (a *agent) write() {
 				log.Println(err.Error())
 				break
 			}
-
+			// log.Println("em", string(em))
 			// packet encode
 			p, err := codec.Encode(packet.Data, em)
 			if err != nil {
 				log.Println(err)
 				break
 			}
+			// log.Println("packet", string(p))
 			chWrite <- p
 
 		case <-a.chDie: // agent closed signal

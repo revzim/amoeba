@@ -10,6 +10,7 @@ require (
 	github.com/labstack/echo/v4 v4.6.0
 	github.com/pingcap/check v0.0.0-20200212061837-5e12011dc712
 	github.com/pingcap/errors v0.11.4
+	github.com/revzim/amoeba-client v0.0.1
 	github.com/revzim/azdrivers v0.0.11
 	github.com/revzim/go-pomelo-client v0.0.11
 	github.com/urfave/cli v1.22.5
