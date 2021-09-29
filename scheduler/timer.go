@@ -165,6 +165,7 @@ func NewTimer(interval time.Duration, fn TimerFunc) *Timer {
 	return NewCountTimer(interval, infinite, fn)
 }
 
+// NewDefTimer --
 func NewDefTimer(interval time.Duration, quit chan struct{}, fn TimerFunc) {
 	ticker := time.NewTicker(interval)
 	// quit := make(chan struct{})
