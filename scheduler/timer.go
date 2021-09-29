@@ -165,6 +165,23 @@ func NewTimer(interval time.Duration, fn TimerFunc) *Timer {
 	return NewCountTimer(interval, infinite, fn)
 }
 
+func NewDefTimer(interval time.Duration, quit chan struct{}, fn TimerFunc) {
+	ticker := time.NewTicker(interval)
+	// quit := make(chan struct{})
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				// do stuff
+				safecall(0, fn)
+			case <-quit:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+}
+
 // NewCountTimer returns a new Timer containing a function that will be called
 // with a period specified by the duration argument. After count times, timer
 // will be stopped automatically, It adjusts the intervals for slow receivers.

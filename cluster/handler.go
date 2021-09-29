@@ -205,7 +205,7 @@ func (h *LocalHandler) handle(conn net.Conn) {
 			client := clusterpb.NewMemberClient(pool.Get())
 			_, err = client.SessionClosed(context.Background(), request)
 			if err != nil {
-				log.Println("Cannot closed session in remote address", remote, err)
+				log.Println("Cannot close session in remote address", remote, err)
 				continue
 			}
 			if env.Debug {
@@ -318,7 +318,7 @@ func (h *LocalHandler) remoteProcess(session *session.Session, msg *message.Mess
 	service := msg.Route[:index]
 	members := h.findMembers(service)
 	if len(members) == 0 {
-		log.Println(fmt.Sprintf("amoeba/handler: %s not found(forgot registered?)", msg.Route))
+		log.Println(fmt.Sprintf("amoeba/handler: msg route %s not found", msg.Route))
 		return
 	}
 
