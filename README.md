@@ -1,5 +1,12 @@
 # [amoeba][1] [![GoDoc][2]][3] [![Go Report Card][4]][5] [![MIT license][6]][7]
 
+## heroku hosted: [amoeba demo game client][18]
+  - ### very simple webapp game client
+    - ### move with WASD
+  - ### server side physics game world
+    - ### bump and smash into others
+  - ### server ai behavior: move
+
 ## modified version of [lonng/nano][8]
 ## - [deprecated/archived fork of this repo][9]
 
@@ -37,6 +44,7 @@
 [15]: media/application.png
 [16]: https://github.com/revzim/amoeba/tree/master/examples/demo/chat2
 [17]: https://github.com/revzim/nano-old#nano---
+[18]: https://amoebago.herokuapp.com
 
 # [amoeba][1]
 [DOCS FROM NANO][17]
