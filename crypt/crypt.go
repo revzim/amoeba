@@ -61,6 +61,10 @@ func (c *Crypt) Checksum(seed string) string {
 	return c.crc.GenChecksum(seed)
 }
 
+func (c *Crypt) GetCRCGenerator() *CRCGenerator {
+	return c.crc
+}
+
 func (c *Crypt) newHash(b []byte) string {
 	hasher := md5.New()
 	hasher.Write(b)
