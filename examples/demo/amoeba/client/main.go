@@ -24,7 +24,7 @@ var (
 	ServerID      string
 	AmoebaClient  *client.Connector
 
-	c = crypt.New([]byte(""))
+	c = crypt.New([]byte(""), 0x0000000000000000)
 )
 
 func DecryptPacket(msg []byte) (map[string]interface{}, error) {

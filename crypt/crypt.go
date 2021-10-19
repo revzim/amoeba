@@ -22,14 +22,17 @@ import (
 type (
 	Crypt struct {
 		key []byte
+		crc *CRCGenerator
 	}
 )
 
 var ()
 
 // New --
-// New Crypto Key will be 32 bytes regardless of length provided
-func New(key []byte) *Crypt {
+// CRYPTO KEY 32 LEN BYTE KEY
+// generatorPoly - UINT64 POLY FOR CRC TABLE (PSEUDO-RANDOM REPLICATABLE SEEDED GENERATION)
+// [DEPRECATED] - InitGenerator NEEDS TO BE CALLED WITH YOUR PROVIDED SEED TO SEED THE RANDOM GENERATOR FOR REPLICATABLE GENERATION
+func New(key []byte, generatorPoly uint64) *Crypt {
 	// tmpKey := make([]byte, 32, '0')
 	tmpKey := make([]byte, 32)
 	for i := range tmpKey {
@@ -41,7 +44,21 @@ func New(key []byte) *Crypt {
 	}
 	key = tmpKey
 	// log.Println("KEY:", string(key))
-	return &Crypt{key}
+	crcGen := NewCRCGenerator(generatorPoly)
+	crcGen.Init(string(key))
+	return &Crypt{
+		key: key,
+		crc: crcGen,
+	}
+
+}
+
+func (c *Crypt) InitGenerator(seed string) {
+	c.crc.Init(seed)
+}
+
+func (c *Crypt) Checksum(seed string) string {
+	return c.crc.GenChecksum(seed)
 }
 
 func (c *Crypt) newHash(b []byte) string {

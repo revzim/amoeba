@@ -71,7 +71,7 @@ const (
 )
 
 var (
-	gsCrypt   = crypt.New([]byte(""))
+	gsCrypt   = crypt.New([]byte(""), 0x0000000000000000)
 	amoebaJWT *auth.JWT
 )
 
