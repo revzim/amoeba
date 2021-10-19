@@ -28,7 +28,7 @@ func NewCRCGenerator(generatorPoly uint64) *CRCGenerator {
 }
 
 func (g *CRCGenerator) Init(seed string) {
-	g.masterinthash = g.generateHashInt(seed)
+	g.masterinthash = g.GenerateHash(seed)
 	g.masterkey = g.GenChecksum(seed)
 	g.masterseed = int64(g.masterinthash)
 	g.Rand = rand.New(rand.NewSource(g.masterseed))
@@ -36,10 +36,10 @@ func (g *CRCGenerator) Init(seed string) {
 }
 
 func (g *CRCGenerator) GenChecksum(seed string) string {
-	hashInt := g.generateHashInt(seed)
+	hashInt := g.GenerateHash(seed)
 	return strconv.FormatUint(hashInt, 16)
 }
 
-func (g *CRCGenerator) generateHashInt(seed string) uint64 {
+func (g *CRCGenerator) GenerateHash(seed string) uint64 {
 	return crc64.Checksum([]byte(seed), g.table)
 }
