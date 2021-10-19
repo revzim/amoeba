@@ -9,7 +9,7 @@ import (
 type (
 
 	// CRCGenerator --
-	// (PSEUDO-RANDOM REPLICATABLE SEEDED GENERATION)
+	// (PSEUDO-RANDOM REPLICABLE SEEDED GENERATION)
 	CRCGenerator struct {
 		*rand.Rand
 		poly          uint64
