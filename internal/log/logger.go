@@ -27,6 +27,7 @@ import (
 
 // Logger represents  the log interface
 type Logger interface {
+	Printf(fmt string, v ...interface{})
 	Println(v ...interface{})
 	Fatal(v ...interface{})
 	Fatalf(format string, v ...interface{})
@@ -48,6 +49,7 @@ func SetLogger(logger Logger) {
 	if logger == nil {
 		return
 	}
+	Printf = logger.Printf
 	Println = logger.Println
 	Fatal = logger.Fatal
 	Fatalf = logger.Fatalf
