@@ -185,7 +185,7 @@ func (h *LocalHandler) handle(conn net.Conn) {
 	go agent.write()
 
 	if env.Debug {
-		log.Println(fmt.Sprintf("New session established: %s", agent.String()))
+		log.Printf("New session established: %s", agent.String())
 	}
 
 	// guarantee agent related resource be destroyed
@@ -215,7 +215,7 @@ func (h *LocalHandler) handle(conn net.Conn) {
 
 		agent.Close()
 		if env.Debug {
-			log.Println(fmt.Sprintf("Session read goroutine exit, SessionID=%d, UID=%d", agent.session.ID(), agent.session.UID()))
+			log.Printf("Session read goroutine exit, SessionID=%d, UID=%d", agent.session.ID(), agent.session.UID())
 		}
 	}()
 
@@ -273,13 +273,13 @@ func (h *LocalHandler) processPacket(agent *agent, p *packet.Packet) error {
 
 		agent.setStatus(statusHandshake)
 		if env.Debug {
-			log.Println(fmt.Sprintf("Session handshake Id=%d, Remote=%s", agent.session.ID(), agent.conn.RemoteAddr()))
+			log.Printf("Session handshake Id=%d, Remote=%s", agent.session.ID(), agent.conn.RemoteAddr())
 		}
 
 	case packet.HandshakeAck:
 		agent.setStatus(statusWorking)
 		if env.Debug {
-			log.Println(fmt.Sprintf("Receive handshake ACK Id=%d, Remote=%s", agent.session.ID(), agent.conn.RemoteAddr()))
+			log.Printf("Receive handshake ACK Id=%d, Remote=%s", agent.session.ID(), agent.conn.RemoteAddr())
 		}
 
 	case packet.Data:
@@ -311,14 +311,14 @@ func (h *LocalHandler) findMembers(service string) []*clusterpb.MemberInfo {
 func (h *LocalHandler) remoteProcess(session *session.Session, msg *message.Message, noCopy bool) {
 	index := strings.LastIndex(msg.Route, ".")
 	if index < 0 {
-		log.Println(fmt.Sprintf("amoeba/handler: invalid route %s", msg.Route))
+		log.Printf("amoeba/handler: invalid route %s", msg.Route)
 		return
 	}
 
 	service := msg.Route[:index]
 	members := h.findMembers(service)
 	if len(members) == 0 {
-		log.Println(fmt.Sprintf("amoeba/handler: msg route %s not found", msg.Route))
+		log.Printf("amoeba/handler: msg route %s not found", msg.Route)
 		return
 	}
 
@@ -373,7 +373,7 @@ func (h *LocalHandler) remoteProcess(session *session.Session, msg *message.Mess
 		_, err = client.HandleNotify(context.Background(), request)
 	}
 	if err != nil {
-		log.Println(fmt.Sprintf("Process remote message (%d:%s) error: %+v", msg.ID, msg.Route, err))
+		log.Printf("Process remote message (%d:%s) error: %+v", msg.ID, msg.Route, err)
 	}
 }
 
@@ -424,13 +424,13 @@ func (h *LocalHandler) localProcess(handler *component.Handler, lastMid uint64, 
 		// log.Println(data)
 		err := env.Serializer.Unmarshal(payload, data)
 		if err != nil {
-			log.Println(fmt.Sprintf("Deserialize to %T failed: %+v (%v)", data, err, payload))
+			log.Printf("Deserialize to %T failed: %+v (%v)", data, err, payload)
 			return
 		}
 	}
 
 	if env.Debug {
-		log.Println(fmt.Sprintf("UID=%d, Message={%s}, Data=%+v", session.UID(), msg.String(), data))
+		log.Printf("UID=%d, Message={%s}, Data=%+v", session.UID(), msg.String(), data)
 	}
 
 	args := []reflect.Value{handler.Receiver, reflect.ValueOf(session), reflect.ValueOf(data)}
@@ -445,14 +445,14 @@ func (h *LocalHandler) localProcess(handler *component.Handler, lastMid uint64, 
 		result := handler.Method.Func.Call(args)
 		if len(result) > 0 {
 			if err := result[0].Interface(); err != nil {
-				log.Println(fmt.Sprintf("Service %s error: %+v", msg.Route, err))
+				log.Printf("Service %s error: %+v", msg.Route, err)
 			}
 		}
 	}
 
 	index := strings.LastIndex(msg.Route, ".")
 	if index < 0 {
-		log.Println(fmt.Sprintf("amoeba/handler: invalid route %s", msg.Route))
+		log.Printf("amoeba/handler: invalid route %s", msg.Route)
 		return
 	}
 
@@ -461,14 +461,14 @@ func (h *LocalHandler) localProcess(handler *component.Handler, lastMid uint64, 
 	if s, found := h.localServices[service]; found && s.SchedName != "" {
 		sched := session.Value(s.SchedName)
 		if sched == nil {
-			log.Println(fmt.Sprintf("nanl/handler: cannot found `schedular.LocalScheduler` by %s", s.SchedName))
+			log.Printf("nanl/handler: cannot found `schedular.LocalScheduler` by %s", s.SchedName)
 			return
 		}
 
 		local, ok := sched.(scheduler.LocalScheduler)
 		if !ok {
-			log.Println(fmt.Sprintf("nanl/handler: Type %T does not implement the `schedular.LocalScheduler` interface",
-				sched))
+			log.Printf("nanl/handler: Type %T does not implement the `schedular.LocalScheduler` interface",
+				sched)
 			return
 		}
 		local.Schedule(task)
