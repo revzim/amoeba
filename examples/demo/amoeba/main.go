@@ -153,7 +153,7 @@ func (mgr *RoomManager) Join(s *session.Session, msg []byte) error {
 					log.Println(err)
 				}
 			}
-			// log.Println(fmt.Sprintf("%s clients: %d", room.group.GetName(), room.group.Count()))
+			// log.Printf("%s clients: %d", room.group.GetName(), room.group.Count())
 		}
 		// INTERVAL = 1 SECOND / TICKRATE
 		room.group.SetOnUpdate(roomOnUpdate, 1)
