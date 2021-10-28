@@ -168,6 +168,7 @@ func (n *Node) EchoWSHandler(c echo.Context) error {
 		queryID := r.URL.Query().Get("id")
 		if queryToken == "" {
 			log.Println("no token present in init conn request", r.RequestURI, r.RemoteAddr)
+			r.Body.Close()
 			return errors.New("no token present in init request")
 		}
 		if queryID == "" {
@@ -180,7 +181,10 @@ func (n *Node) EchoWSHandler(c echo.Context) error {
 			log.Println("bad token: ", queryToken)
 			return errors.New("bad token in init request")
 		}
-		log.Println(fmt.Sprintf("jwt claims: %+v\n", claims))
+		if env.Debug {
+			log.Printf("jwt claims: %+v\n", claims)
+		}
+
 		return nil
 	}
 	if env.JWT != nil {
@@ -193,7 +197,7 @@ func (n *Node) EchoWSHandler(c echo.Context) error {
 	// conn, err := upgrader.Upgrade(w, r, nil)
 	conn, err := upgrader.Upgrade(c.Response(), c.Request(), nil)
 	if err != nil {
-		log.Println(fmt.Sprintf("Upgrade failure, URI=%s, Error=%s", c.Request().RequestURI, err.Error()))
+		log.Printf("Upgrade failure, URI=%s, Error=%s", c.Request().RequestURI, err.Error())
 		return err
 	}
 
@@ -352,7 +356,7 @@ func (n *Node) listenAndServeWS() {
 			log.Println("bad token: ", queryToken)
 			return errors.New("bad token in init request")
 		}
-		log.Println(fmt.Sprintf("jwt claims: %+v\n", claims))
+		log.Printf("jwt claims: %+v\n", claims)
 		return nil
 	}
 
@@ -365,7 +369,7 @@ func (n *Node) listenAndServeWS() {
 		}
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			log.Println(fmt.Sprintf("Upgrade failure, URI=%s, Error=%s", r.RequestURI, err.Error()))
+			log.Printf("Upgrade failure, URI=%s, Error=%s", r.RequestURI, err.Error())
 			return
 		}
 
@@ -387,7 +391,7 @@ func (n *Node) listenAndServeWSTLS() {
 	http.HandleFunc("/"+strings.TrimPrefix(env.WSPath, "/"), func(w http.ResponseWriter, r *http.Request) {
 		conn, err := upgrader.Upgrade(w, r, nil)
 		if err != nil {
-			log.Println(fmt.Sprintf("Upgrade failure, URI=%s, Error=%s", r.RequestURI, err.Error()))
+			log.Printf("Upgrade failure, URI=%s, Error=%s", r.RequestURI, err.Error())
 			return
 		}
 

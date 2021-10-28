@@ -21,7 +21,6 @@
 package amoeba
 
 import (
-	"fmt"
 	"os"
 	"os/signal"
 	"path/filepath"
@@ -101,11 +100,11 @@ func Listen(addr string, opts ...Option) {
 	runtime.CurrentNode = node
 
 	if node.ClientAddr != "" {
-		log.Println(fmt.Sprintf("Startup *amoeba gate server* %s, client address: %v, service address: %s",
-			app.name, node.ClientAddr, node.ServiceAddr))
+		log.Printf("Startup *amoeba gate server* %s, client address: %v, service address: %s",
+			app.name, node.ClientAddr, node.ServiceAddr)
 	} else {
-		log.Println(fmt.Sprintf("Startup *amoeba backend server* %s, service address %s",
-			app.name, node.ServiceAddr))
+		log.Printf("Startup *amoeba backend server* %s, service address %s",
+			app.name, node.ServiceAddr)
 	}
 
 	go scheduler.Sched()
@@ -183,11 +182,11 @@ func ExtendEcho(e *echo.Echo, opts ...Option) {
 	runtime.CurrentNode = node
 
 	if node.ClientAddr != "" {
-		log.Println(fmt.Sprintf("Startup *amoeba gate server* %s, client address: %v, service address: %s",
-			app.name, node.ClientAddr, node.ServiceAddr))
+		log.Printf("Startup *amoeba gate server* %s, client address: %v, service address: %s",
+			app.name, node.ClientAddr, node.ServiceAddr)
 	} else {
-		log.Println(fmt.Sprintf("Startup *amoeba backend server* %s, service address %s",
-			app.name, node.ServiceAddr))
+		log.Printf("Startup *amoeba backend server* %s, service address %s",
+			app.name, node.ServiceAddr)
 	}
 
 	go scheduler.Sched()

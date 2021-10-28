@@ -38,8 +38,9 @@ func init() {
 
 var (
 	Println func(v ...interface{})
+	Printf  func(fmt string, v ...interface{})
 	Fatal   func(v ...interface{})
-	Fatalf  func(format string, v ...interface{})
+	Fatalf  func(fmt string, v ...interface{})
 )
 
 // SetLogger rewrites the default logger

@@ -21,7 +21,6 @@
 package scheduler
 
 import (
-	"fmt"
 	"log"
 	"math"
 	"runtime/debug"
@@ -93,7 +92,7 @@ func (t *Timer) Stop() {
 func safecall(id int64, fn TimerFunc) {
 	defer func() {
 		if err := recover(); err != nil {
-			log.Println(fmt.Sprintf("Handle timer panic: %+v\n%s", err, debug.Stack()))
+			log.Printf("Handle timer panic: %+v\n%s", err, debug.Stack())
 		}
 	}()
 
@@ -165,24 +164,6 @@ func NewTimer(interval time.Duration, fn TimerFunc) *Timer {
 	return NewCountTimer(interval, infinite, fn)
 }
 
-// NewDefTimer --
-func NewDefTimer(interval time.Duration, quit chan struct{}, fn TimerFunc) {
-	ticker := time.NewTicker(interval)
-	// quit := make(chan struct{})
-	go func() {
-		for {
-			select {
-			case <-ticker.C:
-				// do stuff
-				safecall(0, fn)
-			case <-quit:
-				ticker.Stop()
-				return
-			}
-		}
-	}()
-}
-
 // NewCountTimer returns a new Timer containing a function that will be called
 // with a period specified by the duration argument. After count times, timer
 // will be stopped automatically, It adjusts the intervals for slow receivers.
@@ -233,3 +214,53 @@ func NewCondTimer(condition TimerCondition, fn TimerFunc) *Timer {
 
 	return t
 }
+
+// SetTimeout --
+// FOLLOWS JS SetTimeout PARADIGM
+func SetTimeout(tickerFn func(), duration time.Duration) {
+	tickChan := make(chan bool, 1)
+	tickChan <- true
+	ticker := time.NewTicker(duration)
+	for range ticker.C {
+		ticker.Stop()
+		safecall(0, tickerFn)
+		_ = <-tickChan
+		return
+	}
+}
+
+// SetInterval --
+// FOLLOWS JS SetInterval PARADIGM
+func SetInterval(done chan bool, tickerFn func(), duration time.Duration) {
+	ticker := time.NewTicker(duration)
+	go func() {
+		for {
+			select {
+			case <-ticker.C:
+				safecall(0, tickerFn)
+			case <-done:
+				ticker.Stop()
+				return
+			}
+		}
+	}()
+}
+
+// NewDefTimer --
+// [DEPRECATED] - SEE SetInterval
+// func NewDefTimer(interval time.Duration, quit chan struct{}, fn TimerFunc) {
+// 	ticker := time.NewTicker(interval)
+// 	// quit := make(chan struct{})
+// 	go func() {
+// 		for {
+// 			select {
+// 			case <-ticker.C:
+// 				// do stuff
+// 				safecall(0, fn)
+// 			case <-quit:
+// 				ticker.Stop()
+// 				return
+// 			}
+// 		}
+// 	}()
+// }

@@ -21,7 +21,6 @@
 package amoeba
 
 import (
-	"fmt"
 	"sync"
 	"sync/atomic"
 	"time"
@@ -124,7 +123,7 @@ func (g *Group) GetOnUpdate() *scheduler.GameLoop {
 
 func (g *Group) InitDriver(driverType azdrivers.DriverKeyType, driverString string, isNew bool) error {
 	var err error
-	log.Println(fmt.Sprintf("should init new %s driver? %v", driverType, isNew))
+	log.Printf("should init new %s driver? %v", driverType, isNew)
 	switch driverType {
 	case azdrivers.MongoKeyType:
 		var mdriver *azdrivers.AZMongoApp
@@ -238,7 +237,7 @@ func (g *Group) Multicast(route string, v interface{}, filter SessionFilter) err
 	}
 
 	if env.Debug {
-		log.Println(fmt.Sprintf("Multicast %s, Data=%+v", route, v))
+		log.Printf("Multicast %s, Data=%+v", route, v)
 	}
 
 	g.RLock()
@@ -268,7 +267,7 @@ func (g *Group) Broadcast(route string, v interface{}) error {
 	}
 
 	if env.Debug {
-		log.Println(fmt.Sprintf("Broadcast %s, Data=%+v", route, v))
+		log.Printf("Broadcast %s, Data=%+v", route, v)
 	}
 
 	g.RLock()
@@ -276,7 +275,7 @@ func (g *Group) Broadcast(route string, v interface{}) error {
 
 	for _, s := range g.sessions {
 		if err = s.Push(route, data); err != nil {
-			log.Println(fmt.Sprintf("Session push message error, ID=%d, UID=%d, Error=%s", s.ID(), s.UID(), err.Error()))
+			log.Printf("Session push message error, ID=%d, UID=%d, Error=%s", s.ID(), s.UID(), err.Error())
 		}
 	}
 
@@ -302,7 +301,7 @@ func (g *Group) Add(session *session.Session) error {
 	}
 
 	if env.Debug {
-		log.Println(fmt.Sprintf("Add session to group %s, ID=%d, UID=%d", g.name, session.ID(), session.UID()))
+		log.Printf("Add session to group %s, ID=%d, UID=%d", g.name, session.ID(), session.UID())
 	}
 
 	g.Lock()
@@ -325,7 +324,7 @@ func (g *Group) Leave(s *session.Session) error {
 	}
 
 	if env.Debug {
-		log.Println(fmt.Sprintf("Remove session from group %s, UID=%d", g.name, s.UID()))
+		log.Printf("Remove session from group %s, UID=%d", g.name, s.UID())
 	}
 
 	g.Lock()

@@ -140,7 +140,7 @@ func (mgr *RoomManager) Join(s *session.Session, msg []byte) error {
 					log.Println(err)
 				}
 			}
-			log.Println(fmt.Sprintf("%s clients: %d", room.group.GetName(), room.group.Count()))
+			log.Printf("%s clients: %d", room.group.GetName(), room.group.Count())
 		}
 		room.group.SetOnUpdate(roomOnUpdate, 30)
 		mgr.rooms[testRoomID] = room
