@@ -67,7 +67,7 @@ func SetTimeout(tickerFn func(), duration time.Duration) *Ticker {
 
 // SetInterval --
 // FOLLOWS JS SetInterval PARADIGM
-// DONE CHAN TO QUIT OUT OF INTERVAL
+// DONE CHAN TO QUIT
 func SetInterval(done chan bool, tickerFn func(), duration time.Duration) *Ticker {
 	ticker := NewTicker(duration, true)
 	go func() {
