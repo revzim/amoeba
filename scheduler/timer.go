@@ -68,10 +68,38 @@ type (
 		closed    int32          // is timer closed
 		counter   int            // counter
 	}
+
+	Ticker struct {
+		*time.Ticker
+		ID       string        `json:"id"` // HELPER ID IF NEEDED
+		Valid    bool          `json:"valid"`
+		DoneChan chan bool     `json:"done,omitempty"`
+		Duration time.Duration `json:"duration"`
+		Start    int64         `json:"start"`
+		End      int64         `json:"end"`
+	}
 )
 
 func init() {
 	timerManager.timers = map[int64]*Timer{}
+}
+
+func NewTicker(duration time.Duration, init bool) *Ticker {
+	startTime := time.Now().UnixNano()
+
+	// ticker := time.NewTicker(duration)
+	tkr := &Ticker{
+		Duration: duration,
+		Start:    startTime,
+		End:      startTime + int64(duration),
+		Valid:    true,
+		// Ticker:   ticker,
+		DoneChan: make(chan bool, 1),
+	}
+	if init {
+		tkr.Ticker = time.NewTicker(duration)
+	}
+	return tkr
 }
 
 // ID returns id of current timer
@@ -217,51 +245,45 @@ func NewCondTimer(condition TimerCondition, fn TimerFunc) *Timer {
 
 // SetTimeout --
 // FOLLOWS JS SetTimeout PARADIGM
-func SetTimeout(tickerFn func(), duration time.Duration) {
-	tickChan := make(chan bool, 1)
-	tickChan <- true
-	ticker := time.NewTicker(duration)
+func SetTimeout(tickerFn func(), duration time.Duration) *Ticker {
+	ticker := NewTicker(duration, true)
+	ticker.DoneChan <- true
 	for range ticker.C {
-		ticker.Stop()
 		safecall(0, tickerFn)
-		_ = <-tickChan
-		return
+		ticker.Clear()
+		return ticker
 	}
+	return ticker
 }
 
 // SetInterval --
 // FOLLOWS JS SetInterval PARADIGM
 // DONE CHAN TO QUIT OUT OF INTERVAL
-func SetInterval(done chan bool, tickerFn func(), duration time.Duration) {
-	ticker := time.NewTicker(duration)
+func SetInterval(done chan bool, tickerFn func(), duration time.Duration) *Ticker {
+	ticker := NewTicker(duration, true)
 	go func() {
 		for {
 			select {
 			case <-ticker.C:
 				safecall(0, tickerFn)
 			case <-done:
-				ticker.Stop()
+				ticker.Clear()
 				return
 			}
 		}
 	}()
+	return ticker
 }
 
-// NewDefTimer --
-// [DEPRECATED] - SEE SetInterval
-// func NewDefTimer(interval time.Duration, quit chan struct{}, fn TimerFunc) {
-// 	ticker := time.NewTicker(interval)
-// 	// quit := make(chan struct{})
-// 	go func() {
-// 		for {
-// 			select {
-// 			case <-ticker.C:
-// 				// do stuff
-// 				safecall(0, fn)
-// 			case <-quit:
-// 				ticker.Stop()
-// 				return
-// 			}
-// 		}
-// 	}()
-// }
+// Clear --
+// CLEARS TICKER VALS
+func (t *Ticker) Clear() {
+	if t == nil {
+		return
+	}
+	if len(t.DoneChan) == cap(t.DoneChan) {
+		_ = <-t.DoneChan
+	}
+	t.Stop()
+	t.Valid = false
+}
